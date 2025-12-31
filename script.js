@@ -19,7 +19,7 @@ const images = {
     hastanelik: Array.from({ length: 9 }, (_, i) => `nuncay_hastanelik_${i + 1}.jpg`)
 };
 
-const sfxFiles = Array.from({ length: 8 }, (_, i) => `sfx${i + 1}.mp3`);
+const sfxFiles = Array.from({ length: 6 }, (_, i) => `sfx${i + 1}.mp3`);
 
 function playRandomSfx() {
     const randomSfx = sfxFiles[Math.floor(Math.random() * sfxFiles.length)];
