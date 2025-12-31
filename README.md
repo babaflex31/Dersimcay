@@ -1,2 +1,2 @@
 # Dersimcay
-gavat
+Bizde köprüdeydik ama tankın içinde

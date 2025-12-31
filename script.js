@@ -10,8 +10,45 @@ const damageOverlay = document.getElementById('damageOverlay');
 let score = 0;
 let combo = 0;
 let comboTimer;
-let lastX = 0;
-let lastY = 0;
+let hitsSinceLastChange = 0;
+let currentImageFilename = 'target.png';
+
+const images = {
+    koltuk: Array.from({ length: 9 }, (_, i) => `nuncay_koltuk_${i + 1}.jpg`),
+    fena: Array.from({ length: 9 }, (_, i) => `nuncay_fena_${i + 1}.jpg`),
+    hastanelik: Array.from({ length: 9 }, (_, i) => `nuncay_hastanelik_${i + 1}.jpg`)
+};
+
+const sfxFiles = Array.from({ length: 8 }, (_, i) => `sfx${i + 1}.mp3`);
+
+function playRandomSfx() {
+    const randomSfx = sfxFiles[Math.floor(Math.random() * sfxFiles.length)];
+    const audio = new Audio(`assets/Sfx/${randomSfx}`);
+    audio.play();
+}
+
+function changeTargetImage() {
+    let category;
+    if (score < 40) {
+        category = 'koltuk';
+    } else if (score < 120) {
+        category = 'fena';
+    } else {
+        category = 'hastanelik';
+    }
+
+    const available = images[category];
+    let nextImage;
+    do {
+        nextImage = available[Math.floor(Math.random() * available.length)];
+    } while (nextImage === currentImageFilename && available.length > 1);
+
+    currentImageFilename = nextImage;
+    targetImg.src = `assets/İmages/${nextImage}`;
+
+    const bruises = document.querySelectorAll('.temporary-bruise');
+    bruises.forEach(b => b.remove());
+}
 
 const insults = [
     "AHHH!", "YAVAŞ!", "GAVAT!", "ZENCİ!", "ÖLDÜM!",
@@ -22,8 +59,6 @@ const insults = [
 window.addEventListener('contextmenu', e => e.preventDefault());
 
 document.addEventListener('mousemove', (e) => {
-    lastX = e.clientX;
-    lastY = e.clientY;
     punchCursor.style.left = e.clientX + 'px';
     punchCursor.style.top = e.clientY + 'px';
     kickCursor.style.left = e.clientX + 'px';
@@ -33,6 +68,8 @@ document.addEventListener('mousemove', (e) => {
 function performAttack(e, type) {
     const isKick = type === 'kick';
     const power = isKick ? 2.5 : (0.8 + Math.random() * 0.4);
+
+    playRandomSfx();
 
     if (isKick) {
         punchCursor.style.display = 'none';
@@ -63,10 +100,17 @@ function performAttack(e, type) {
 
     createRealisticDamage(e.clientX, e.clientY, power, isKick);
 
-    score += isKick ? 10 : 1;
+    score += isKick ? 3 : 1;
     combo++;
+    hitsSinceLastChange++;
+
     scoreEl.innerText = score;
     comboEl.innerText = combo;
+
+    if (hitsSinceLastChange >= 10) {
+        changeTargetImage();
+        hitsSinceLastChange = 0;
+    }
 
     updateDamageLevel();
 
@@ -100,8 +144,8 @@ function createRealisticDamage(x, y, power, isKick) {
         bruise.style.left = (x - rect.left - size / 2) + 'px';
         bruise.style.top = (y - rect.top - size / 2) + 'px';
 
-        const intensity = Math.min(0.5 + (score / 150), 0.95);
-        bruise.style.background = `radial-gradient(ellipse at center, rgba(30, 0, 60, ${intensity}) 0%, rgba(100, 20, 0, ${intensity / 2}) 70%, transparent 100%)`;
+        const intensity = Math.min(0.2 + (score / 1500), 0.4);
+        bruise.style.background = `radial-gradient(ellipse at center, rgba(30, 0, 60, ${intensity}) 0%, rgba(100, 20, 0, ${intensity / 1.5}) 70%, transparent 100%)`;
         bruise.style.borderRadius = `${35 + Math.random() * 30}% ${35 + Math.random() * 30}%`;
 
         targetWrapper.appendChild(bruise);
