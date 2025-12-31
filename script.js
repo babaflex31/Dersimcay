@@ -12,6 +12,7 @@ let combo = 0;
 let comboTimer;
 let hitsSinceLastChange = 0;
 let currentImageFilename = 'target.png';
+let lastWasSpecialKick = false;
 
 const images = {
     koltuk: Array.from({ length: 9 }, (_, i) => `nuncay_koltuk_${i + 1}.jpg`),
@@ -120,7 +121,15 @@ function performAttack(e, type) {
         comboEl.innerText = combo;
     }, 1500);
 
-    createFloatingText(e.clientX, e.clientY, isKick ? "KICK!!!" : null, isKick);
+    let kickText = "KICK!!!";
+    if (isKick && !lastWasSpecialKick && Math.random() < 0.08) { // %8 ihtimal ve üst üste binmez
+        kickText = "kick.com/thetuncay";
+        lastWasSpecialKick = true;
+    } else if (isKick) {
+        lastWasSpecialKick = false;
+    }
+
+    createFloatingText(e.clientX, e.clientY, isKick ? kickText : null, isKick);
 }
 
 gameArea.addEventListener('mousedown', (e) => {
@@ -167,12 +176,21 @@ function updateDamageLevel() {
 
 function createFloatingText(x, y, customText = null, isHeavy = false) {
     const text = document.createElement('div');
+    const isSpecial = customText === "kick.com/thetuncay";
+
     text.className = isHeavy ? 'floating-text heavy' : 'floating-text';
+    if (isSpecial) text.classList.add('kick-link');
+
     text.innerText = customText || insults[Math.floor(Math.random() * insults.length)];
     text.style.left = x + 'px';
     text.style.top = y + 'px';
     document.body.appendChild(text);
-    setTimeout(() => text.remove(), 800);
+
+    const duration = isSpecial ? 2000 : 800;
+    setTimeout(() => {
+        text.style.opacity = '0';
+        setTimeout(() => text.remove(), 500);
+    }, duration);
 }
 
 punchCursor.style.display = 'block';
