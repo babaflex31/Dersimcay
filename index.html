@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amcaya elle</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Outfit:wght@400;700;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="overlay" id="damageOverlay"></div>
+    <div class="container">
+        <header>
+            <h1 class="mocking-title">NUNCAY'I <span class="accent">SİK</span></h1>
+            <p>Vur gavata vur gavata amk gavatı</p>
+        </header>
+
+        <div class="game-area" id="gameArea">
+            <div id="targetWrapper" class="target-wrapper">
+                <img src="assets/target.png" id="targetImg" alt="Hedef"
+                    onerror="this.src='https://via.placeholder.com/400x500?text=Fotoğraf+Yükle'; this.classList.add('placeholder');">
+            </div>
+            <div id="punchEffect" class="punch-effect"></div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <span class="label">TOPLAM DARBE</span>
+                <span id="score" class="value">0</span>
+            </div>
+            <div class="stat-box">
+                <span class="label">KOMBO</span>
+                <span id="combo" class="value">0</span>
+            </div>
+        </div>
+
+        <div class="game-controls">
+            <div class="control-item">🖱️ Sol Tık: <span>YUMRUK</span></div>
+            <div class="control-item">🖱️ Sağ Tık: <span>TEKME</span></div>
+        </div>
+
+        <div class="instructions">
+            <p>Dersimcay</p>
+        </div>
+    </div>
+
+    <img src="assets/punch.png" id="punchCursor" class="punch-cursor" style="display: none;">
+    <img src="assets/kick.png" id="kickCursor" class="punch-cursor" style="display: none;">
+
+    <script src="script.js"></script>
+</body>
+
+</html>
